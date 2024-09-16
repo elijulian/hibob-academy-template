@@ -2,10 +2,22 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
+	id("org.flywaydb.flyway") version "10.4.1"
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.3.3"
 	id("io.spring.dependency-management") version "1.1.6"
+}
+
+buildscript {
+	dependencies {
+		classpath("org.flywaydb:flyway-database-postgresql:10.4.1")
+	}
+}
+
+flyway {
+	url = "jdbc:postgresql://localhost:5432/academy?user=bob&password=dev"
+	driver = "org.postgresql.Driver"
 }
 
 java {
@@ -17,6 +29,8 @@ java {
 repositories {
 	mavenCentral()
 }
+
+
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -34,6 +48,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jooq:jooq:3.16.9")
 	implementation("org.slf4j:slf4j-api")
+
+//	implementation("org.flywaydb:flyway-database-postgresql:10.4.1")
+
 
 	implementation("org.postgresql:postgresql")
 
@@ -61,7 +78,7 @@ tasks {
 		if (dbUrl != null && dbUrl.isNotBlank()) {
 			systemProperty("DB_URL", dbUrl)
 		} else {
-			systemProperty("DB_URL", "jdbc:postgresql://localhost:5432/email_service?user=bob&password=dev")
+			systemProperty("DB_URL", "jdbc:postgresql://localhost:5432/academy?user=bob&password=dev")
 		}
 		systemProperty("spring.profiles.active", "development,test")
 	}
